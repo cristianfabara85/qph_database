@@ -1,0 +1,822 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.11
+-- Dumped by pg_dump version 14.11
+
+-- Started on 2024-06-03 10:07:39
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+DROP DATABASE qph;
+--
+-- TOC entry 3384 (class 1262 OID 16793)
+-- Name: qph; Type: DATABASE; Schema: -; Owner: postgres
+--
+
+CREATE DATABASE qph WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE = 'Spanish_Spain.1252';
+
+
+ALTER DATABASE qph OWNER TO postgres;
+
+\connect qph
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 209 (class 1259 OID 16794)
+-- Name: catalogos; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.catalogos (
+    catalogoid integer NOT NULL,
+    tipo integer NOT NULL,
+    nombre character varying(100),
+    estado integer NOT NULL,
+    documentoid character varying(13)
+);
+
+
+ALTER TABLE public.catalogos OWNER TO postgres;
+
+--
+-- TOC entry 210 (class 1259 OID 16797)
+-- Name: catalogos_catalogoid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.catalogos_catalogoid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.catalogos_catalogoid_seq OWNER TO postgres;
+
+--
+-- TOC entry 3385 (class 0 OID 0)
+-- Dependencies: 210
+-- Name: catalogos_catalogoid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.catalogos_catalogoid_seq OWNED BY public.catalogos.catalogoid;
+
+
+--
+-- TOC entry 211 (class 1259 OID 16798)
+-- Name: compras; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.compras (
+    compraid integer NOT NULL,
+    productoid character varying(10) NOT NULL,
+    proveedor character varying(100) NOT NULL,
+    cantidad numeric(50,0) NOT NULL,
+    fecharegistro date,
+    preciounitario numeric(50,2),
+    preciototal numeric(50,2)
+);
+
+
+ALTER TABLE public.compras OWNER TO postgres;
+
+--
+-- TOC entry 212 (class 1259 OID 16801)
+-- Name: compras_compraid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.compras_compraid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.compras_compraid_seq OWNER TO postgres;
+
+--
+-- TOC entry 3386 (class 0 OID 0)
+-- Dependencies: 212
+-- Name: compras_compraid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.compras_compraid_seq OWNED BY public.compras.compraid;
+
+
+--
+-- TOC entry 222 (class 1259 OID 16839)
+-- Name: factcab; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.factcab (
+    id integer NOT NULL,
+    clienteid bigint NOT NULL,
+    fecharegistro date NOT NULL,
+    totalfactura double precision NOT NULL
+);
+
+
+ALTER TABLE public.factcab OWNER TO postgres;
+
+--
+-- TOC entry 221 (class 1259 OID 16838)
+-- Name: factcab_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.factcab_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.factcab_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3387 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: factcab_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.factcab_id_seq OWNED BY public.factcab.id;
+
+
+--
+-- TOC entry 224 (class 1259 OID 16846)
+-- Name: factdet; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.factdet (
+    id integer NOT NULL,
+    factcabid bigint NOT NULL,
+    productoid bigint NOT NULL,
+    cantidad integer NOT NULL,
+    precio double precision NOT NULL,
+    subtotal double precision NOT NULL,
+    iva double precision NOT NULL,
+    total double precision NOT NULL
+);
+
+
+ALTER TABLE public.factdet OWNER TO postgres;
+
+--
+-- TOC entry 223 (class 1259 OID 16845)
+-- Name: factdet_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.factdet_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.factdet_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3388 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: factdet_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.factdet_id_seq OWNED BY public.factdet.id;
+
+
+--
+-- TOC entry 213 (class 1259 OID 16802)
+-- Name: productos; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.productos (
+    productoid integer NOT NULL,
+    codigo character varying(10) NOT NULL,
+    nombre character varying(100) NOT NULL,
+    preciounidad numeric(10,2) NOT NULL
+);
+
+
+ALTER TABLE public.productos OWNER TO postgres;
+
+--
+-- TOC entry 214 (class 1259 OID 16805)
+-- Name: productos_productoid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.productos_productoid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.productos_productoid_seq OWNER TO postgres;
+
+--
+-- TOC entry 3389 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: productos_productoid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.productos_productoid_seq OWNED BY public.productos.productoid;
+
+
+--
+-- TOC entry 215 (class 1259 OID 16806)
+-- Name: stock; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.stock (
+    stockid integer NOT NULL,
+    productoid numeric(50,0) NOT NULL,
+    entradas numeric(50,0),
+    salidas numeric(50,0),
+    disponible numeric(50,0)
+);
+
+
+ALTER TABLE public.stock OWNER TO postgres;
+
+--
+-- TOC entry 216 (class 1259 OID 16809)
+-- Name: stock_stockid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.stock_stockid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.stock_stockid_seq OWNER TO postgres;
+
+--
+-- TOC entry 3390 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: stock_stockid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.stock_stockid_seq OWNED BY public.stock.stockid;
+
+
+--
+-- TOC entry 217 (class 1259 OID 16810)
+-- Name: usuarios; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.usuarios (
+    usuarioid integer NOT NULL,
+    nombre character varying(100) NOT NULL,
+    correo character varying(100),
+    usuario character varying(100) NOT NULL,
+    password character varying(300) NOT NULL,
+    tipo integer NOT NULL
+);
+
+
+ALTER TABLE public.usuarios OWNER TO postgres;
+
+--
+-- TOC entry 218 (class 1259 OID 16815)
+-- Name: usuarios_usuarioid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.usuarios_usuarioid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.usuarios_usuarioid_seq OWNER TO postgres;
+
+--
+-- TOC entry 3391 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: usuarios_usuarioid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.usuarios_usuarioid_seq OWNED BY public.usuarios.usuarioid;
+
+
+--
+-- TOC entry 219 (class 1259 OID 16816)
+-- Name: ventas; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.ventas (
+    ventaid integer NOT NULL,
+    productoid character varying(10) NOT NULL,
+    cliente character varying(100) NOT NULL,
+    cantidad numeric(50,0) NOT NULL,
+    fecharegistro date,
+    preciounitario numeric(50,2),
+    preciototal numeric(50,2)
+);
+
+
+ALTER TABLE public.ventas OWNER TO postgres;
+
+--
+-- TOC entry 220 (class 1259 OID 16819)
+-- Name: ventas_ventaid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.ventas_ventaid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.ventas_ventaid_seq OWNER TO postgres;
+
+--
+-- TOC entry 3392 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: ventas_ventaid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.ventas_ventaid_seq OWNED BY public.ventas.ventaid;
+
+
+--
+-- TOC entry 3199 (class 2604 OID 16820)
+-- Name: catalogos catalogoid; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.catalogos ALTER COLUMN catalogoid SET DEFAULT nextval('public.catalogos_catalogoid_seq'::regclass);
+
+
+--
+-- TOC entry 3200 (class 2604 OID 16821)
+-- Name: compras compraid; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.compras ALTER COLUMN compraid SET DEFAULT nextval('public.compras_compraid_seq'::regclass);
+
+
+--
+-- TOC entry 3205 (class 2604 OID 16842)
+-- Name: factcab id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.factcab ALTER COLUMN id SET DEFAULT nextval('public.factcab_id_seq'::regclass);
+
+
+--
+-- TOC entry 3206 (class 2604 OID 16849)
+-- Name: factdet id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.factdet ALTER COLUMN id SET DEFAULT nextval('public.factdet_id_seq'::regclass);
+
+
+--
+-- TOC entry 3201 (class 2604 OID 16822)
+-- Name: productos productoid; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.productos ALTER COLUMN productoid SET DEFAULT nextval('public.productos_productoid_seq'::regclass);
+
+
+--
+-- TOC entry 3202 (class 2604 OID 16823)
+-- Name: stock stockid; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.stock ALTER COLUMN stockid SET DEFAULT nextval('public.stock_stockid_seq'::regclass);
+
+
+--
+-- TOC entry 3203 (class 2604 OID 16824)
+-- Name: usuarios usuarioid; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usuarios ALTER COLUMN usuarioid SET DEFAULT nextval('public.usuarios_usuarioid_seq'::regclass);
+
+
+--
+-- TOC entry 3204 (class 2604 OID 16825)
+-- Name: ventas ventaid; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ventas ALTER COLUMN ventaid SET DEFAULT nextval('public.ventas_ventaid_seq'::regclass);
+
+
+--
+-- TOC entry 3363 (class 0 OID 16794)
+-- Dependencies: 209
+-- Data for Name: catalogos; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.catalogos (catalogoid, tipo, nombre, estado, documentoid) VALUES (7, 1, 'Corporacion Favorita', 1, '179854621300
+');
+INSERT INTO public.catalogos (catalogoid, tipo, nombre, estado, documentoid) VALUES (8, 1, 'Corporacion Rosado', 1, '059764210400
+');
+INSERT INTO public.catalogos (catalogoid, tipo, nombre, estado, documentoid) VALUES (9, 1, 'Comics Store S.A', 1, '0457986120001');
+INSERT INTO public.catalogos (catalogoid, tipo, nombre, estado, documentoid) VALUES (10, 2, 'Christian Fabara', 1, '1714717277
+');
+INSERT INTO public.catalogos (catalogoid, tipo, nombre, estado, documentoid) VALUES (12, 2, 'Juan Crespo', 1, '1709276791');
+INSERT INTO public.catalogos (catalogoid, tipo, nombre, estado, documentoid) VALUES (11, 2, 'Viviana Santos', 1, '1719211383');
+
+
+--
+-- TOC entry 3365 (class 0 OID 16798)
+-- Dependencies: 211
+-- Data for Name: compras; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.compras (compraid, productoid, proveedor, cantidad, fecharegistro, preciounitario, preciototal) VALUES (5, '3', 'Corporacion Favorita', 12, '2022-03-12', 5.00, 60.00);
+INSERT INTO public.compras (compraid, productoid, proveedor, cantidad, fecharegistro, preciounitario, preciototal) VALUES (6, '5', 'Comics Store S.A', 3, '2022-03-12', 25.50, 76.50);
+INSERT INTO public.compras (compraid, productoid, proveedor, cantidad, fecharegistro, preciounitario, preciototal) VALUES (7, '3', 'Comics Store S.A', 24, '2022-03-12', 5.75, 138.00);
+INSERT INTO public.compras (compraid, productoid, proveedor, cantidad, fecharegistro, preciounitario, preciototal) VALUES (8, '9', 'Corporacion Favorita', 15, '2022-03-13', 12.00, 180.00);
+INSERT INTO public.compras (compraid, productoid, proveedor, cantidad, fecharegistro, preciounitario, preciototal) VALUES (9, '10', 'Corporacion Favorita', 10, '2024-06-01', 2.50, 25.00);
+
+
+--
+-- TOC entry 3376 (class 0 OID 16839)
+-- Dependencies: 222
+-- Data for Name: factcab; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (3, 12, '2024-06-01', 5.175);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (4, 12, '2024-06-01', 5.175);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (5, 12, '2024-06-01', 166.75);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (6, 12, '2024-06-01', 2.875);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (7, 11, '2024-06-01', 5.75);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (8, 11, '2024-06-01', 69);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (9, 10, '2024-06-01', 22.425);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (10, 10, '2024-06-01', 2.875);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (11, 12, '2024-06-01', 2.875);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (12, 10, '2024-06-01', 19.55);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (13, 12, '2024-06-01', 8.625);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (14, 12, '2024-06-01', 24.725);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (15, 12, '2024-06-03', 87.3885);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (16, 10, '2024-06-03', 32.1885);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (17, 12, '2024-06-03', 67.85);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (18, 10, '2024-06-03', 82.225);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (19, 12, '2024-06-03', 28.75);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (20, 12, '2024-06-03', 22.425);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (21, 11, '2024-06-03', 12.65);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (22, 11, '2024-06-03', 12.65);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (23, 10, '2024-06-03', 19.55);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (24, 11, '2024-06-03', 5.175);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (25, 12, '2024-06-03', 5.175);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (26, 11, '2024-06-03', 28.75);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (27, 12, '2024-06-03', 28.75);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (28, 10, '2024-06-03', 19.55);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (29, 10, '2024-06-03', 19.55);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (30, 12, '2024-06-03', 28.75);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (31, 11, '2024-06-03', 46);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (32, 10, '2024-06-03', 12.65);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (33, 11, '2024-06-03', 8.625);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (34, 10, '2024-06-03', 8.625);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (35, 10, '2024-06-03', 8.625);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (36, 11, '2024-06-03', 46);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (37, 10, '2024-06-03', 28.75);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (38, 11, '2024-06-03', 25.875);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (39, 10, '2024-06-03', 28.75);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (40, 10, '2024-06-03', 28.75);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (41, 12, '2024-06-03', 12.65);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (42, 10, '2024-06-03', 25.875);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (43, 11, '2024-06-03', 20.7);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (44, 10, '2024-06-03', 10.35);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (45, 12, '2024-06-03', 62.1);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (46, 10, '2024-06-03', 15.525);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (47, 12, '2024-06-03', 8.625);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (48, 11, '2024-06-03', 57.5);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (49, 12, '2024-06-03', 29.888499999999997);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (50, 11, '2024-06-03', 10.35);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (51, 12, '2024-06-03', 230);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (52, 12, '2024-06-03', 2.875);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (53, 11, '2024-06-03', 2.875);
+INSERT INTO public.factcab (id, clienteid, fecharegistro, totalfactura) VALUES (54, 11, '2024-06-03', 10.35);
+
+
+--
+-- TOC entry 3378 (class 0 OID 16846)
+-- Dependencies: 224
+-- Data for Name: factdet; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (2, 3, 11, 1, 4.5, 4.5, 0.6749999999999999, 5.175);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (3, 4, 11, 1, 4.5, 4.5, 0.6749999999999999, 5.175);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (4, 5, 10, 1, 2.5, 2.5, 0.375, 2.875);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (5, 5, 2, 3, 7.5, 22.5, 3.375, 25.875);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (6, 5, 8, 3, 40, 120, 18, 138);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (7, 6, 10, 1, 2.5, 2.5, 0.375, 2.875);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (8, 7, 10, 2, 2.5, 5, 0.75, 5.75);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (9, 8, 10, 24, 2.5, 60, 9, 69);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (10, 9, 10, 1, 2.5, 2.5, 0.375, 2.875);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (11, 9, 12, 1, 17, 17, 2.55, 19.55);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (12, 10, 10, 1, 2.5, 2.5, 0.375, 2.875);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (13, 11, 10, 1, 2.5, 2.5, 0.375, 2.875);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (14, 12, 12, 1, 17, 17, 2.55, 19.55);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (15, 13, 2, 1, 7.5, 7.5, 1.125, 8.625);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (16, 14, 12, 1, 17, 17, 2.55, 19.55);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (17, 14, 11, 1, 4.5, 4.5, 0.6749999999999999, 5.175);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (18, 15, 13, 2, 25, 50, 7.5, 57.5);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (19, 15, 5, 1, 25.99, 25.99, 3.8984999999999994, 29.888499999999997);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (20, 16, 6, 1, 27.99, 27.99, 4.198499999999999, 32.1885);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (21, 17, 9, 1, 9, 9, 1.3499999999999999, 10.35);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (22, 17, 13, 2, 25, 50, 7.5, 57.5);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (23, 18, 2, 3, 7.5, 22.5, 3.375, 25.875);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (24, 18, 9, 1, 9, 9, 1.3499999999999999, 10.35);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (25, 18, 8, 1, 40, 40, 6, 46);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (26, 19, 13, 1, 25, 25, 3.75, 28.75);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (27, 20, 2, 2, 7.5, 15, 2.25, 17.25);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (28, 20, 11, 1, 4.5, 4.5, 0.6749999999999999, 5.175);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (29, 21, 3, 1, 11, 11, 1.65, 12.65);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (30, 22, 3, 1, 11, 11, 1.65, 12.65);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (31, 23, 12, 1, 17, 17, 2.55, 19.55);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (32, 24, 11, 1, 4.5, 4.5, 0.6749999999999999, 5.175);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (33, 25, 11, 1, 4.5, 4.5, 0.6749999999999999, 5.175);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (34, 26, 13, 1, 25, 25, 3.75, 28.75);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (35, 27, 13, 1, 25, 25, 3.75, 28.75);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (36, 28, 12, 1, 17, 17, 2.55, 19.55);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (37, 29, 12, 1, 17, 17, 2.55, 19.55);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (38, 30, 13, 1, 25, 25, 3.75, 28.75);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (39, 31, 8, 1, 40, 40, 6, 46);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (40, 32, 3, 1, 11, 11, 1.65, 12.65);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (41, 33, 2, 1, 7.5, 7.5, 1.125, 8.625);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (42, 34, 2, 1, 7.5, 7.5, 1.125, 8.625);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (43, 35, 2, 1, 7.5, 7.5, 1.125, 8.625);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (44, 36, 8, 1, 40, 40, 6, 46);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (45, 37, 13, 1, 25, 25, 3.75, 28.75);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (46, 38, 2, 3, 7.5, 22.5, 3.375, 25.875);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (47, 39, 13, 1, 25, 25, 3.75, 28.75);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (48, 40, 10, 10, 2.5, 25, 3.75, 28.75);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (49, 41, 3, 1, 11, 11, 1.65, 12.65);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (50, 42, 11, 5, 4.5, 22.5, 3.375, 25.875);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (51, 43, 11, 4, 4.5, 18, 2.6999999999999997, 20.7);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (52, 44, 9, 1, 9, 9, 1.3499999999999999, 10.35);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (53, 45, 9, 6, 9, 54, 8.1, 62.1);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (54, 46, 11, 3, 4.5, 13.5, 2.025, 15.525);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (55, 47, 2, 1, 7.5, 7.5, 1.125, 8.625);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (56, 48, 13, 2, 25, 50, 7.5, 57.5);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (57, 49, 5, 1, 25.99, 25.99, 3.8984999999999994, 29.888499999999997);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (58, 50, 9, 1, 9, 9, 1.3499999999999999, 10.35);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (59, 51, 13, 8, 25, 200, 30, 230);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (60, 52, 10, 1, 2.5, 2.5, 0.375, 2.875);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (61, 53, 10, 1, 2.5, 2.5, 0.375, 2.875);
+INSERT INTO public.factdet (id, factcabid, productoid, cantidad, precio, subtotal, iva, total) VALUES (62, 54, 9, 1, 9, 9, 1.3499999999999999, 10.35);
+
+
+--
+-- TOC entry 3367 (class 0 OID 16802)
+-- Dependencies: 213
+-- Data for Name: productos; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.productos (productoid, codigo, nombre, preciounidad) VALUES (6, 'vb05', 'Camiseta Batman', 27.99);
+INSERT INTO public.productos (productoid, codigo, nombre, preciounidad) VALUES (3, 'vb03', 'Vaso Batman 500 ml.', 11.00);
+INSERT INTO public.productos (productoid, codigo, nombre, preciounidad) VALUES (5, 'vb04', 'Camiseta Hulk MD', 25.99);
+INSERT INTO public.productos (productoid, codigo, nombre, preciounidad) VALUES (8, 'vb07', 'Lampara Spiderman led', 40.00);
+INSERT INTO public.productos (productoid, codigo, nombre, preciounidad) VALUES (9, 'vb08', 'Camiseta Libre Soy', 9.00);
+INSERT INTO public.productos (productoid, codigo, nombre, preciounidad) VALUES (10, 'vb09', 'Vaso Mario Bross 250 ml', 2.50);
+INSERT INTO public.productos (productoid, codigo, nombre, preciounidad) VALUES (11, 'vb10', 'Lampara Mario Bross', 4.50);
+INSERT INTO public.productos (productoid, codigo, nombre, preciounidad) VALUES (12, 'vb11', 'Jarro Iron Man', 17.00);
+INSERT INTO public.productos (productoid, codigo, nombre, preciounidad) VALUES (13, 'vb12', 'Guante Hulk', 25.00);
+INSERT INTO public.productos (productoid, codigo, nombre, preciounidad) VALUES (2, 'vb02', 'Vaso Batman 200 ml.', 7.50);
+
+
+--
+-- TOC entry 3369 (class 0 OID 16806)
+-- Dependencies: 215
+-- Data for Name: stock; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.stock (stockid, productoid, entradas, salidas, disponible) VALUES (14, 9, 15, 11, 4);
+INSERT INTO public.stock (stockid, productoid, entradas, salidas, disponible) VALUES (17, 12, 0, 6, -6);
+INSERT INTO public.stock (stockid, productoid, entradas, salidas, disponible) VALUES (13, 8, 0, 3, -3);
+INSERT INTO public.stock (stockid, productoid, entradas, salidas, disponible) VALUES (9, 6, 0, 1, -1);
+INSERT INTO public.stock (stockid, productoid, entradas, salidas, disponible) VALUES (11, 3, 36, 16, 20);
+INSERT INTO public.stock (stockid, productoid, entradas, salidas, disponible) VALUES (16, 11, 0, 16, -16);
+INSERT INTO public.stock (stockid, productoid, entradas, salidas, disponible) VALUES (10, 2, 0, 13, -13);
+INSERT INTO public.stock (stockid, productoid, entradas, salidas, disponible) VALUES (12, 5, 3, 2, 1);
+INSERT INTO public.stock (stockid, productoid, entradas, salidas, disponible) VALUES (18, 13, 0, 20, -20);
+INSERT INTO public.stock (stockid, productoid, entradas, salidas, disponible) VALUES (15, 10, 10, 42, -32);
+
+
+--
+-- TOC entry 3371 (class 0 OID 16810)
+-- Dependencies: 217
+-- Data for Name: usuarios; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.usuarios (usuarioid, nombre, correo, usuario, password, tipo) VALUES (6, 'Viviana Santos', 'vsantos@hotmail.com', 'vsantos', 'TEZCHomQNZTTwmhTFqrEew==', 1);
+INSERT INTO public.usuarios (usuarioid, nombre, correo, usuario, password, tipo) VALUES (5, 'Christian Fabara Riofrio', 'cristianfabara@hotmail.com', 'cristianfabara', 'TEZCHomQNZTTwmhTFqrEew==', 2);
+INSERT INTO public.usuarios (usuarioid, nombre, correo, usuario, password, tipo) VALUES (7, 'Juan Perez', 'jperez@hotmail.com', 'jperez', 'TEZCHomQNZTTwmhTFqrEew==', 1);
+
+
+--
+-- TOC entry 3373 (class 0 OID 16816)
+-- Dependencies: 219
+-- Data for Name: ventas; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.ventas (ventaid, productoid, cliente, cantidad, fecharegistro, preciounitario, preciototal) VALUES (1, '3', 'Viviana Santos', 6, '2022-03-12', 8.00, 48.00);
+INSERT INTO public.ventas (ventaid, productoid, cliente, cantidad, fecharegistro, preciounitario, preciototal) VALUES (2, '3', 'Christian Fabara', 5, '2022-03-12', 12.83, 64.15);
+INSERT INTO public.ventas (ventaid, productoid, cliente, cantidad, fecharegistro, preciounitario, preciototal) VALUES (3, '3', 'Juan Crespo', 1, '2022-03-13', 12.00, 12.00);
+
+
+--
+-- TOC entry 3393 (class 0 OID 0)
+-- Dependencies: 210
+-- Name: catalogos_catalogoid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.catalogos_catalogoid_seq', 12, true);
+
+
+--
+-- TOC entry 3394 (class 0 OID 0)
+-- Dependencies: 212
+-- Name: compras_compraid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.compras_compraid_seq', 9, true);
+
+
+--
+-- TOC entry 3395 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: factcab_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.factcab_id_seq', 54, true);
+
+
+--
+-- TOC entry 3396 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: factdet_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.factdet_id_seq', 62, true);
+
+
+--
+-- TOC entry 3397 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: productos_productoid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.productos_productoid_seq', 13, true);
+
+
+--
+-- TOC entry 3398 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: stock_stockid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.stock_stockid_seq', 18, true);
+
+
+--
+-- TOC entry 3399 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: usuarios_usuarioid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.usuarios_usuarioid_seq', 7, true);
+
+
+--
+-- TOC entry 3400 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: ventas_ventaid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.ventas_ventaid_seq', 3, true);
+
+
+--
+-- TOC entry 3208 (class 2606 OID 16827)
+-- Name: catalogos catalogoid_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.catalogos
+    ADD CONSTRAINT catalogoid_pk PRIMARY KEY (catalogoid);
+
+
+--
+-- TOC entry 3210 (class 2606 OID 16829)
+-- Name: compras compraid_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.compras
+    ADD CONSTRAINT compraid_pk PRIMARY KEY (compraid);
+
+
+--
+-- TOC entry 3220 (class 2606 OID 16844)
+-- Name: factcab factcab_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.factcab
+    ADD CONSTRAINT factcab_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3222 (class 2606 OID 16851)
+-- Name: factdet factdet_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.factdet
+    ADD CONSTRAINT factdet_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3212 (class 2606 OID 16831)
+-- Name: productos producto_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.productos
+    ADD CONSTRAINT producto_pk PRIMARY KEY (productoid);
+
+
+--
+-- TOC entry 3214 (class 2606 OID 16833)
+-- Name: stock stockid_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.stock
+    ADD CONSTRAINT stockid_pk PRIMARY KEY (stockid);
+
+
+--
+-- TOC entry 3216 (class 2606 OID 16835)
+-- Name: usuarios usuarioid_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usuarios
+    ADD CONSTRAINT usuarioid_pk PRIMARY KEY (usuarioid);
+
+
+--
+-- TOC entry 3218 (class 2606 OID 16837)
+-- Name: ventas ventaid_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ventas
+    ADD CONSTRAINT ventaid_pk PRIMARY KEY (ventaid);
+
+
+--
+-- TOC entry 3223 (class 2606 OID 16852)
+-- Name: factdet factdet_factcabid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.factdet
+    ADD CONSTRAINT factdet_factcabid_fkey FOREIGN KEY (factcabid) REFERENCES public.factcab(id) ON DELETE CASCADE;
+
+
+-- Completed on 2024-06-03 10:07:39
+
+--
+-- PostgreSQL database dump complete
+--
+
